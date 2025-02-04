@@ -6,8 +6,10 @@ void loop() {
     analogWrite(3, i);
     delay(5);
   }
-  for(int i=255;i>0; i-=5){
-    analogWrite(3, i);
+  int a = 255;
+  while (a>0) {
+    analogWrite(3, a);
     delay(5);
+    a -= 5;
   }
 }
