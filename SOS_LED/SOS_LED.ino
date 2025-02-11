@@ -3,15 +3,15 @@ void setup() {
   pinMode(LED, OUTPUT);
 }
 void loop() {
-  for (int i=0; i<4; i++) {
+  for (int i=0; i<3; i++) {
     shortBlink(LED);
     delay(500);
   }
-  for (int i=0; i<4; i++) {
+  for (int i=0; i<3; i++) {
     longBlink(LED);
     delay(500);
   }
-  for (int i=0; i<4; i++) {
+  for (int i=0; i<3; i++) {
     shortBlink(LED);
     delay(500);
   }

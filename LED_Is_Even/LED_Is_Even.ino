@@ -1,9 +1,9 @@
-int red = 3;
-int green = 4;
+int red = 11;
+int green = 10;
 void setup() {
   pinMode(green, OUTPUT);
   pinMode(red, OUTPUT);
-  Begin.serial(115200);
+  Serial.begin(115200);
 }
 void loop() {
   int randNum = random(0,100);
