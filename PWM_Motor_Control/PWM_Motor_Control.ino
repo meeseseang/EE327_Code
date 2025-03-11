@@ -1,4 +1,4 @@
-// Use preprocessor definitions to define the pins
+// Set pin numbers
 #define enPIN    11
 #define dir1     10
 #define dir2     9
@@ -6,72 +6,75 @@
 #define greenLED 2
 #define yellLED  4
 #define blueLED  5
-#define potPIN    A0
+#define potPIN   A0
+#define button1  6
+#define button2  7
 
-// Define variables
-float delayMicro = 1500.0; // Value is in microseconds (500 for a 2kHz PWM frequency)
+float delayMicro = 4000.0;
+
+// Toggle booleans
+bool motorOn   = false;
 bool clockwise = false;
-bool motorOn = false;
 
 void setup() {
-  // Initialize pins for input/output
-  pinMode(enPIN, OUTPUT);
-  pinMode(dir1, OUTPUT);
-  pinMode(dir2, OUTPUT);
-  pinMode(redLED, OUTPUT);
-  pinMode(greenLED, OUTPUT);
-  pinMode(yellLED, OUTPUT);
-  pinMode(blueLED, OUTPUT);
-  pinMode(potPIN, INPUT);
-}
-
-void setMotorSpeed() {
-  int potValue = analogRead(A0);
-  float percent = 0.0;
-  if (potValue >= 511) {
-    digitalWrite(dir1, LOW);
-    digitalWrite(dir2, HIGH);
-    clockwise = true;
-    percent = ((float)potValue - 511.0) / 512.0;
-    float onTime = percent * delayMicro;
-    float offTime = delayMicro - onTime;
-    digitalWrite(enPIN, HIGH);
-    delayMicroseconds(onTime);
-    digitalWrite(enPIN, LOW);
-    delayMicroseconds(offTime);
-  } else {
-    digitalWrite(dir2, LOW);
-    digitalWrite(dir1, HIGH);
-    clockwise = false;
-    percent = (512.0 - (float)potValue) / 512.0;
-    float onTime = percent * delayMicro;
-    float offTime = delayMicro - onTime;
-    digitalWrite(enPIN, HIGH);
-    delayMicroseconds(onTime);
-    digitalWrite(enPIN, LOW);
-    delayMicroseconds(offTime);
-  }
-  if ((percent*100) < 30.0) {
-    motorOn = false;
-  } else {
-    motorOn = true;
-  }
+  // Set pin modes for input and output
+  pinMode(enPIN,     OUTPUT);
+  pinMode(dir1,      OUTPUT);
+  pinMode(dir2,      OUTPUT);
+  pinMode(button1,   INPUT_PULLUP);
+  pinMode(button2,   INPUT_PULLUP);
+  pinMode(redLED,    OUTPUT);
+  pinMode(greenLED,  OUTPUT);
+  pinMode(yellLED,   OUTPUT);
+  pinMode(blueLED,   OUTPUT);
 }
 
 void loop() {
-  setMotorSpeed();
-  if(motorOn) {
-    digitalWrite(redLED, LOW);
-    digitalWrite(greenLED, HIGH);
-  } else {
-    digitalWrite(redLED, HIGH);
-    digitalWrite(greenLED, LOW);
+  float percent = (float)analogRead(potPIN) / 1023.0;
+  float onTime = percent * delayMicro;
+  float offTime = delayMicro - onTime;
+  // Toggle motor on and direction based on button input
+  if(digitalRead(button1) == LOW){
+    if(motorOn){
+      motorOn = false;
+    } else {
+      motorOn = true;
+    }
   }
-  if (clockwise) {
-    digitalWrite(blueLED, HIGH);
-    digitalWrite(yellLED, LOW);
+  if(digitalRead(button2) == LOW){
+    if(clockwise){
+      clockwise = false;
+    } else {
+      clockwise = true;
+    }
+  }
+  // Based on booleans enable/disable motor and set direction
+  if(motorOn){
+    digitalWrite(greenLED, HIGH);
+    digitalWrite(redLED, LOW);
+    if(clockwise){
+      digitalWrite(blueLED, HIGH);
+      digitalWrite(yellLED, LOW);
+      digitalWrite(dir1, LOW);
+      digitalWrite(dir2, HIGH);
+      digitalWrite(enPIN, HIGH);
+      delayMicroseconds(onTime);
+      digitalWrite(enPIN, LOW);
+      delayMicroseconds(offTime);
+    } else {
+      digitalWrite(blueLED, LOW);
+      digitalWrite(yellLED, HIGH);
+      digitalWrite(dir2, LOW);
+      digitalWrite(dir1, HIGH);
+      digitalWrite(enPIN, HIGH);
+      delayMicroseconds(onTime);
+      digitalWrite(enPIN, LOW);
+      delayMicroseconds(offTime);
+    }
   } else {
-    digitalWrite(blueLED, LOW);
-    digitalWrite(yellLED, HIGH);
+    digitalWrite(greenLED, LOW);
+    digitalWrite(redLED, HIGH);
+    digitalWrite(dir1, LOW);
+    digitalWrite(dir2, LOW);
   }
 }
