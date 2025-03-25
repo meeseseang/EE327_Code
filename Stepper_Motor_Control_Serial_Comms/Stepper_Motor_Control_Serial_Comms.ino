@@ -75,26 +75,8 @@ void incrementCCW(){
 }
 
 void readSerial(){
-  static byte ndx = 0;
-  char rC;
-  char endMark = '\n';
-  //char receivedChars[6];
   String receivedChars;
-
   while (Serial.available() > 0) { // Check if data is available
-    /*rC = Serial.read();
-    if(rC != endMark) {
-      receivedChars[ndx] = rC;
-      ndx++;
-      if (ndx >= 6){
-        ndx = 5;
-      } else {
-        receivedChars[ndx] = '\0';
-        ndx = 0;
-        Serial.println(receivedChars);
-      }
-    }
-    */
     receivedChars = Serial.readString();
     receivedChars.trim();
     if(receivedChars == "Stop"){
