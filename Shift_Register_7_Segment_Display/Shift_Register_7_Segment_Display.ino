@@ -1,6 +1,6 @@
-#define latchPin 6
-#define serialDat 3
-#define shiftClk 5
+#define latchPin 4
+#define serialDat 2
+#define shiftClk 3
 
 const uint8_t segmentMap[11] = {
   0b11111100, // 0
